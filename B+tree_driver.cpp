@@ -9,7 +9,7 @@
 
 using namespace std;
 
-//Postal record lookup
+// Postal record lookup
 bool lookupPostalRecord(int zip,
                         PostalRecord &out,
                         BlockSequenceSetPostalCode &bss)
@@ -23,9 +23,9 @@ bool lookupPostalRecord(int zip,
 
         if (item.getZip() == zip)
         {
-            out.zip    = item.getZip();
-            out.place  = item.getPlace();
-            out.state  = item.getState();
+            out.zip = item.getZip();
+            out.place = item.getPlace();
+            out.state = item.getState();
             out.county = item.getCounty();
             return true;
         }
@@ -42,7 +42,6 @@ bool lookupPostalRecord(int zip,
 
     return false; // not found in the sequence set
 }
-
 
 int main()
 {
@@ -83,6 +82,7 @@ int main()
     // Redirect std::cout to the file
     std::cout.rdbuf(outputFile.rdbuf());
 
+    // Sequencing print B+tree
     tree.printTree();
 
     // Restore std::cout's original buffer
@@ -90,42 +90,45 @@ int main()
 
     outputFile.close();
 
+    cout << "B+tree builded successfully!" << endl;
+    cout << "B+ tree file: B+Tree_data.txt" << endl;
+
     int zip;
-while (true)
-{
-    std::cout << "Enter ZIP to search (0 to quit): ";
-    if (!(std::cin >> zip))
+    while (true)
     {
-        std::cout << "Input error, exiting...\n";
-        break;
-    }
-
-    if (zip == 0)
-    {
-        break;
-    }
-
-    if (tree.search(zip))   // B+ tree index says "this ZIP exists"
-    {
-        PostalRecord rec;
-        if (lookupPostalRecord(zip, rec, myBlockSequenceSetPostalCode))
+        std::cout << "Enter ZIP to search (0 to quit): ";
+        if (!(std::cin >> zip))
         {
-            std::cout << "\nFOUND ZIP " << rec.zip << "\n"
-                      << "Place:  " << rec.place  << "\n"
-                      << "State:  " << rec.state  << "\n"
-                      << "County: " << rec.county << "\n\n";
+            std::cout << "Input error, exiting...\n";
+            break;
+        }
+
+        if (zip == 0)
+        {
+            break;
+        }
+
+        if (tree.search(zip)) // B+ tree index says "this ZIP exists"
+        {
+            PostalRecord rec;
+            if (lookupPostalRecord(zip, rec, myBlockSequenceSetPostalCode))
+            {
+                std::cout << "\nFOUND ZIP " << rec.zip << "\n"
+                          << "Place:  " << rec.place << "\n"
+                          << "State:  " << rec.state << "\n"
+                          << "County: " << rec.county << "\n\n";
+            }
+            else
+            {
+                std::cout << "ZIP " << zip
+                          << " FOUND in B+ tree\n\n";
+            }
         }
         else
         {
-            std::cout << "ZIP " << zip
-                      << " FOUND in B+ tree\n\n";
+            std::cout << "ZIP " << zip << " NOT FOUND in B+ tree\n\n";
         }
     }
-    else
-    {
-        std::cout << "ZIP " << zip << " NOT FOUND in B+ tree\n\n";
-    }
-}
 
     return 0;
 }
