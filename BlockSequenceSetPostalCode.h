@@ -1,5 +1,5 @@
-#ifndef BLOCK_SEQUENCE_SET_POSTAL_CODE
-#define BLOCK_SEQUENCE_SET_POSTAL_CODE
+#ifndef BLOCK_SEQUENCE_SET_POSTAL_CODE_H
+#define BLOCK_SEQUENCE_SET_POSTAL_CODE_H
 
 /**
  * @file BlockSequenceSetPostalCode.h
@@ -35,9 +35,9 @@
 class BlockSequenceSetPostalCode
 {
 private:
-    BlockPostalCode *headBlock; ///< Pointer to the first block in the sequence.
-    BlockPostalCode *tailBlock; ///< Pointer to the last block in the sequence.
-    int itemCount;              ///< Total number of blocks stored.
+    BlockPostalCode* headBlock; ///< Pointer to the first block in the sequence.
+    BlockPostalCode* tailBlock; ///< Pointer to the last block in the sequence.
+    int currentSize;              ///< Total number of blocks stored.
 
 public:
     /**
@@ -46,23 +46,27 @@ public:
     BlockSequenceSetPostalCode();
 
     /**
-     * @brief Adds a new header postal code item as a BlockPostalCode.
-     * @param newHeaderPostalCodeItem The item to insert into a new block.
-     * @return true if the block was successfully created and linked.
+     * @brief Gets the number of blocks stored in the sequence.
+     * @return The total count of blocks.
      */
-    bool add(const HeaderRecordPostalCodeItem &newHeaderPostalCodeItem);
+    int getCurrentSize() const;
 
     /**
      * @brief Retrieves the head block by value.
      * @return A copy of the first BlockPostalCode in the sequence.
      */
-    BlockPostalCode getHead() const;
+    BlockPostalCode* getHead() const { return headBlock; }
 
     /**
-     * @brief Gets the number of blocks stored in the sequence.
-     * @return The total count of blocks.
+     * @brief Adds a new header postal code item as a BlockPostalCode.
+     * @param newHeaderPostalCodeItem The item to insert into a new block.
+     * @return true if the block was successfully created and linked.
      */
-    int getCurrentSize() const;
+    bool add(const HeaderRecordPostalCodeItem& item);
+
+    
+
+    
 };
 
 #endif
