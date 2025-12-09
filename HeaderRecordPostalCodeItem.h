@@ -8,6 +8,9 @@
 #ifndef HEADER_RECORD_POSTAL_CODE_ITEM
 #define HEADER_RECORD_POSTAL_CODE_ITEM
 
+#include <string>
+using std::string;
+
 using namespace std;
 
 class HeaderRecordPostalCodeItem
@@ -152,5 +155,4 @@ public:
     void printInfo() const;
 };
 
-#include "HeaderRecordPostalCodeItem.cpp"
 #endif
