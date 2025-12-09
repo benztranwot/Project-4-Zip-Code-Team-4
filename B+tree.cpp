@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
+#include "PostalRecord.h"
 using namespace std;
 
 // B plus tree class
@@ -262,19 +263,24 @@ void BPlusTree<T>::merge(LinkedBlock *linkedBlock, int index)
 
 // Implementation of printTree function
 template <typename T>
-void BPlusTree<T>::printTree(LinkedBlock* linkedBlock, int level)
+void BPlusTree<T>::printTree(LinkedBlock *linkedBlock, int level)
 {
-    if (!linkedBlock) return;
-
-    for (int i = 0; i < level; ++i) cout << "  ";
-
-    cout << (linkedBlock->isLeaf ? "[L] " : "[I] ");
-
-    for (const T& key : linkedBlock->keys) cout << endl;
-
-    cout << endl;
-
-    for (LinkedBlock* child : linkedBlock->children) printTree(child, level + 1);
+    if (linkedBlock != nullptr)
+    {
+        for (int i = 0; i < level; ++i)
+        {
+            cout << "  ";
+        }
+        for (const T &key : linkedBlock->keys)
+        {
+            cout << key << " ";
+        }
+        cout << endl;
+        for (LinkedBlock *child : linkedBlock->children)
+        {
+            printTree(child, level + 1);
+        }
+    }
 }
 
 // Implementation of printTree wrapper function
