@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
+#include "PostalRecord.h"
 using namespace std;
 
 // B plus tree class

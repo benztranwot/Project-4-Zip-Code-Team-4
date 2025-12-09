@@ -95,5 +95,4 @@ public:
     BlockPostalCode *getNext() const;
 };
 
-#include "BlockPostalCode.cpp"
 #endif

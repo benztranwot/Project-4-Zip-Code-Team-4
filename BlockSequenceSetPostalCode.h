@@ -65,5 +65,4 @@ public:
     int getCurrentSize() const;
 };
 
-#include "BlockSequenceSetPostalCode.cpp"
 #endif
