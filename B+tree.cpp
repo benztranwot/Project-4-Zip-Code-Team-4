@@ -4,62 +4,208 @@
 #include "PostalRecord.h"
 using namespace std;
 
-// B plus tree class
+/**
+ * @brief B+ tree class template.
+ *
+ * Implements a basic B+ tree with insert, remove, search,
+ * range query, and printing capabilities. The tree nodes
+ * are represented by LinkedBlock structures.
+ *
+ * @tparam T Type of keys stored in the B+ tree.
+ */
 template <typename T>
 class BPlusTree
 {
 public:
-    // structure to create a linkedBlock
+    /**
+     * @brief Node structure representing a B+ tree block.
+     *
+     * Each LinkedBlock can be either an internal node or a leaf.
+     * Leaf nodes are linked together using the @c next pointer to
+     * support efficient range queries.
+     */
     struct LinkedBlock
     {
+        /// @brief Flag indicating whether this node is a leaf.
         bool isLeaf;
+
+        /// @brief Keys stored in this node (sorted).
         vector<T> keys;
+
+        /**
+         * @brief Child pointers.
+         *
+         * For internal nodes, this holds pointers to child nodes.
+         * For leaf nodes, this vector is typically empty.
+         */
         vector<LinkedBlock *> children;
+
+        /**
+         * @brief Pointer to the next leaf node.
+         *
+         * Used only when this node is a leaf. Supports fast
+         * traversal for range queries.
+         */
         LinkedBlock *next;
 
+        /**
+         * @brief Constructs a LinkedBlock node.
+         *
+         * @param leaf True if the node should be a leaf, false otherwise.
+         */
         LinkedBlock(bool leaf = false)
             : isLeaf(leaf), next(nullptr)
         {
         }
     };
 
+    /// @brief Pointer to the root node of the B+ tree.
     LinkedBlock *root;
-    // Minimum degree (defines the range for the number of
-    // keys)
+
+    /**
+     * @brief Minimum degree of the B+ tree.
+     *
+     * Defines the minimum and maximum number of keys in a node.
+     * Each node (except root) has at least @c t-1 keys and at most
+     * @c 2*t-1 keys.
+     */
     int t;
 
-    // Function to split a child linkedBlock
+    /**
+     * @brief Splits a full child node of an internal node.
+     *
+     * Used during insertion when a child node is full. The node
+     * is split into two nodes, and a key is promoted into the parent.
+     *
+     * @param parent Pointer to the parent node.
+     * @param index Index of the child in the parent's children vector.
+     * @param child Pointer to the child node to split.
+     */
     void splitChild(LinkedBlock *parent, int index, LinkedBlock *child);
 
-    // Function to insert a key in a non-full linkedBlock
+    /**
+     * @brief Inserts a key into a non-full node.
+     *
+     * Called by insert() after ensuring that the root is not full.
+     *
+     * @param linkedBlock Pointer to the node that is guaranteed to be non-full.
+     * @param key Key to insert.
+     */
     void insertNonFull(LinkedBlock *linkedBlock, T key);
 
-    // Function to remove a key from a linkedBlock
+    /**
+     * @brief Removes a key from a subtree rooted at a given node.
+     *
+     * Internal recursive helper for the public remove(T key) function.
+     *
+     * @param linkedBlock Pointer to the current node.
+     * @param key Key to remove.
+     */
     void remove(LinkedBlock *linkedBlock, T key);
 
-    // Function to borrow a key from the previous sibling
+    /**
+     * @brief Borrows a key from the previous sibling of a child.
+     *
+     * Used during deletion when a child has too few keys and its
+     * left sibling can spare a key.
+     *
+     * @param linkedBlock Pointer to the parent node.
+     * @param index Index of the child in the parent's children vector.
+     */
     void borrowFromPrev(LinkedBlock *linkedBlock, int index);
 
-    // Function to borrow a key from the next sibling
+    /**
+     * @brief Borrows a key from the next sibling of a child.
+     *
+     * Used during deletion when a child has too few keys and its
+     * right sibling can spare a key.
+     *
+     * @param linkedBlock Pointer to the parent node.
+     * @param index Index of the child in the parent's children vector.
+     */
     void borrowFromNext(LinkedBlock *linkedBlock, int index);
 
-    // Function to merge two linkedBlocks
+    /**
+     * @brief Merges a child node with its right sibling.
+     *
+     * Used during deletion when both a child and its sibling have
+     * the minimum number of keys, and they are combined into a single node.
+     *
+     * @param linkedBlock Pointer to the parent node.
+     * @param index Index of the left child to merge with its right sibling.
+     */
     void merge(LinkedBlock *linkedBlock, int index);
 
-    // Function to print the tree
+    /**
+     * @brief Prints the keys of the subtree rooted at a given node.
+     *
+     * Recursive helper for the public printTree() function.
+     *
+     * @param linkedBlock Pointer to the current node.
+     * @param level Current depth level in the tree (for indentation).
+     */
     void printTree(LinkedBlock *linkedBlock, int level);
 
 public:
+    /**
+     * @brief Constructs a B+ tree with a given minimum degree.
+     *
+     * @param degree Minimum degree (t) of the B+ tree.
+     */
     BPlusTree(int degree) : root(nullptr), t(degree) {}
 
+    /**
+     * @brief Inserts a key into the B+ tree.
+     *
+     * If the root is full, it is split and the tree height increases.
+     *
+     * @param key Key to insert.
+     */
     void insert(T key);
+
+    /**
+     * @brief Searches for a key in the B+ tree.
+     *
+     * @param key Key to search for.
+     * @return true If the key is found.
+     * @return false If the key is not found.
+     */
     bool search(T key);
+
+    /**
+     * @brief Removes a key from the B+ tree.
+     *
+     * Handles root adjustment if it becomes empty after deletion.
+     *
+     * @param key Key to remove.
+     */
     void remove(T key);
+
+    /**
+     * @brief Performs a range query on the B+ tree.
+     *
+     * Returns all keys in the closed interval [lower, upper].
+     *
+     * @param lower Lower bound of the range (inclusive).
+     * @param upper Upper bound of the range (inclusive).
+     * @return vector<T> Collection of keys in the specified range.
+     */
     vector<T> rangeQuery(T lower, T upper);
+
+    /**
+     * @brief Prints the entire B+ tree to standard output.
+     *
+     * Wrapper around the recursive printTree(LinkedBlock*, int) function.
+     */
     void printTree();
 };
 
 // Implementation of splitChild function
+/**
+ * @brief Splits a full child node of an internal node.
+ *
+ * See BPlusTree::splitChild for detailed description.
+ */
 template <typename T>
 void BPlusTree<T>::splitChild(LinkedBlock *parent, int index,
                               LinkedBlock *child)
@@ -89,6 +235,11 @@ void BPlusTree<T>::splitChild(LinkedBlock *parent, int index,
 }
 
 // Implementation of insertNonFull function
+/**
+ * @brief Inserts a key into a node that is guaranteed to be non-full.
+ *
+ * See BPlusTree::insertNonFull for detailed description.
+ */
 template <typename T>
 void BPlusTree<T>::insertNonFull(LinkedBlock *linkedBlock, T key)
 {
@@ -119,7 +270,12 @@ void BPlusTree<T>::insertNonFull(LinkedBlock *linkedBlock, T key)
     }
 }
 
-// Implementation of remove function
+// Implementation of remove function (internal helper)
+/**
+ * @brief Internal recursive remove helper.
+ *
+ * See BPlusTree::remove(LinkedBlock*, T) for detailed description.
+ */
 template <typename T>
 void BPlusTree<T>::remove(LinkedBlock *linkedBlock, T key)
 {
@@ -199,6 +355,11 @@ void BPlusTree<T>::remove(LinkedBlock *linkedBlock, T key)
 }
 
 // Implementation of borrowFromPrev function
+/**
+ * @brief Borrows a key from the previous sibling of a child node.
+ *
+ * See BPlusTree::borrowFromPrev for detailed description.
+ */
 template <typename T>
 void BPlusTree<T>::borrowFromPrev(LinkedBlock *linkedBlock, int index)
 {
@@ -219,6 +380,11 @@ void BPlusTree<T>::borrowFromPrev(LinkedBlock *linkedBlock, int index)
 }
 
 // Implementation of borrowFromNext function
+/**
+ * @brief Borrows a key from the next sibling of a child node.
+ *
+ * See BPlusTree::borrowFromNext for detailed description.
+ */
 template <typename T>
 void BPlusTree<T>::borrowFromNext(LinkedBlock *linkedBlock, int index)
 {
@@ -238,6 +404,11 @@ void BPlusTree<T>::borrowFromNext(LinkedBlock *linkedBlock, int index)
 }
 
 // Implementation of merge function
+/**
+ * @brief Merges a child node with its right sibling.
+ *
+ * See BPlusTree::merge for detailed description.
+ */
 template <typename T>
 void BPlusTree<T>::merge(LinkedBlock *linkedBlock, int index)
 {
@@ -262,6 +433,11 @@ void BPlusTree<T>::merge(LinkedBlock *linkedBlock, int index)
 }
 
 // Implementation of printTree function
+/**
+ * @brief Recursively prints the subtree rooted at a given node.
+ *
+ * See BPlusTree::printTree(LinkedBlock*, int) for detailed description.
+ */
 template <typename T>
 void BPlusTree<T>::printTree(LinkedBlock *linkedBlock, int level)
 {
@@ -284,6 +460,9 @@ void BPlusTree<T>::printTree(LinkedBlock *linkedBlock, int level)
 }
 
 // Implementation of printTree wrapper function
+/**
+ * @brief Prints the entire B+ tree starting from the root.
+ */
 template <typename T>
 void BPlusTree<T>::printTree()
 {
@@ -291,6 +470,11 @@ void BPlusTree<T>::printTree()
 }
 
 // Implementation of search function
+/**
+ * @brief Searches for a key starting from the root node.
+ *
+ * See BPlusTree::search for detailed description.
+ */
 template <typename T>
 bool BPlusTree<T>::search(T key)
 {
@@ -316,6 +500,14 @@ bool BPlusTree<T>::search(T key)
 }
 
 // Implementation of range query function
+/**
+ * @brief Executes a range query on the B+ tree.
+ *
+ * Starts from the leaf node where the lower bound would
+ * be located and traverses forward using leaf links.
+ *
+ * See BPlusTree::rangeQuery for detailed description.
+ */
 template <typename T>
 vector<T> BPlusTree<T>::rangeQuery(T lower, T upper)
 {
@@ -349,6 +541,11 @@ vector<T> BPlusTree<T>::rangeQuery(T lower, T upper)
 }
 
 // Implementation of insert function
+/**
+ * @brief Inserts a key into the B+ tree, handling root splitting if necessary.
+ *
+ * See BPlusTree::insert for detailed description.
+ */
 template <typename T>
 void BPlusTree<T>::insert(T key)
 {
@@ -370,7 +567,12 @@ void BPlusTree<T>::insert(T key)
     }
 }
 
-// Implementation of remove function
+// Implementation of remove function (public)
+/**
+ * @brief Removes a key from the B+ tree, adjusting the root if needed.
+ *
+ * See BPlusTree::remove(T) for detailed description.
+ */
 template <typename T>
 void BPlusTree<T>::remove(T key)
 {
