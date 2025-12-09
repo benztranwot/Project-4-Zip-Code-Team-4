@@ -14,9 +14,9 @@
  * @brief Default constructor. Creates an empty block sequence set.
  *
  * The head and tail block pointers are initialized to nullptr and the
- * item count is set to zero.
+ * current size is set to zero.
  */
-BlockSequenceSetPostalCode::BlockSequenceSetPostalCode() : headBlock(nullptr), itemCount(0) {}
+BlockSequenceSetPostalCode::BlockSequenceSetPostalCode() : headBlock(nullptr), tailBlock(nullptr), currentSize(0) {}
 
 /**
  * @brief Gets the number of items currently stored in the sequence set.
@@ -24,17 +24,7 @@ BlockSequenceSetPostalCode::BlockSequenceSetPostalCode() : headBlock(nullptr), i
  */
 int BlockSequenceSetPostalCode::getCurrentSize() const
 {
-    return itemCount;
-}
-
-/**
- * @brief Returns the current head block by value.
- * @return A copy of the first BlockPostalCode in the sequence set.
- * @pre The sequence set must not be empty (headBlock != nullptr).
- */
-BlockPostalCode BlockSequenceSetPostalCode::getHead() const
-{
-    return *headBlock;
+    return currentSize;
 }
 
 /**
@@ -48,10 +38,10 @@ BlockPostalCode BlockSequenceSetPostalCode::getHead() const
  * @param newHeaderPostalCodeItem The header record to add as a new block.
  * @return true if the block was successfully added.
  */
-bool BlockSequenceSetPostalCode::add(const HeaderRecordPostalCodeItem &newHeaderPostalCodeItem)
+bool BlockSequenceSetPostalCode::add(const HeaderRecordPostalCodeItem& item)
 {
-    BlockPostalCode *newBlock = new BlockPostalCode();
-    newBlock->setBlockItem(newHeaderPostalCodeItem);
+    BlockPostalCode* newBlock = new BlockPostalCode();
+    newBlock->setBlockItem(item);
 
     if (headBlock == nullptr || tailBlock == nullptr)
     {
@@ -71,7 +61,7 @@ bool BlockSequenceSetPostalCode::add(const HeaderRecordPostalCodeItem &newHeader
         tailBlock = newBlock;
     }
 
-    itemCount++;
+    currentSize++;
 
     return true;
 }
