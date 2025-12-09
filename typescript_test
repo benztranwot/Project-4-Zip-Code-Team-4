@@ -1,0 +1,40 @@
+Script started on 2025-12-09 05:44:29+00:00 [TERM="xterm-256color" TTY="/dev/pts/1" COLUMNS="146" LINES="14"]
+[?2004h[0;32m@benztranwot [0m➜ [1;34m/workspaces/Project-4-Zip-Code-Team-4 [0;36m([1;31mmain[0;36m) [0m$ [7mg++ -std=c++17 -Wall -O2 "B+tree_driver.cpp" "B+tree.cpp" BlockPostalCode.cpp BlockS[27m[7me[27m[7mquenceSetPostalCode.cpp HeaderRecordPostalCodeItem.cpp -o search[27m[Ag++ -std=c++17 -Wall -O2 "B+tree_driver.cpp" "B+tree.cpp" BlockPostalCode.cpp BlockSequenceSetPostalCode.cpp HeaderRecordPostalCodeItem.cpp -o search
+[?2004lIn file included from [01m[KB+tree_driver.cpp:8[m[K:
+B+tree.cpp: In instantiation of ‘[01m[Kvoid BPlusTree<T>::[01;32m[Kinsert[m[K(T) [35m[K[with T = int][m[K[m[K’:
+[01m[KB+tree_driver.cpp:63:16:[m[K   required from here
+[01m[KB+tree.cpp:362:31:[m[K [01;35m[Kwarning: [m[Kcomparison of integer expressions of different signedness: ‘[01m[Kstd::vector<int, std::allocator<int> >::size_type[m[K’ {aka ‘[01m[Klong unsigned int[m[K’} and ‘[01m[Kint[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wsign-compare-Wsign-compare]8;;[m[K]
+  362 |         if ([01;35m[Kroot->keys.size() == 2 * t - 1[m[K)
+      |             [01;35m[K~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~[m[K
+B+tree.cpp: In instantiation of ‘[01m[Kbool BPlusTree<T>::[01;32m[Ksearch[m[K(T) [35m[K[with T = int][m[K[m[K’:
+[01m[KB+tree_driver.cpp:111:24:[m[K   required from here
+[01m[KB+tree.cpp:301:18:[m[K [01;35m[Kwarning: [m[Kcomparison of integer expressions of different signedness: ‘[01m[Kint[m[K’ and ‘[01m[Kstd::vector<int, std::allocator<int> >::size_type[m[K’ {aka ‘[01m[Klong unsigned int[m[K’} [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wsign-compare-Wsign-compare]8;;[m[K]
+  301 |         while ([01;35m[Ki < current->keys.size()[m[K && key > current->keys[i])
+      |                [01;35m[K~~^~~~~~~~~~~~~~~~~~~~~~[m[K
+[01m[KB+tree.cpp:305:15:[m[K [01;35m[Kwarning: [m[Kcomparison of integer expressions of different signedness: ‘[01m[Kint[m[K’ and ‘[01m[Kstd::vector<int, std::allocator<int> >::size_type[m[K’ {aka ‘[01m[Klong unsigned int[m[K’} [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wsign-compare-Wsign-compare]8;;[m[K]
+  305 |         if ([01;35m[Ki < current->keys.size()[m[K && key == current->keys[i])
+      |             [01;35m[K~~^~~~~~~~~~~~~~~~~~~~~~[m[K
+B+tree.cpp: In instantiation of ‘[01m[Kvoid BPlusTree<T>::[01;32m[KinsertNonFull[m[K(LinkedBlock*, T) [35m[K[with T = int][m[K[m[K’:
+[01m[KB+tree.cpp:369:9:[m[K   required from ‘[01m[Kvoid BPlusTree<T>::[01;32m[Kinsert[m[K(T) [35m[K[with T = int][m[K[m[K’
+[01m[KB+tree_driver.cpp:63:16:[m[K   required from here
+[01m[KB+tree.cpp:110:51:[m[K [01;35m[Kwarning: [m[Kcomparison of integer expressions of different signedness: ‘[01m[Kstd::vector<int, std::allocator<int> >::size_type[m[K’ {aka ‘[01m[Klong unsigned int[m[K’} and ‘[01m[Kint[m[K’ [[01;35m[K]8;;https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wsign-compare-Wsign-compare]8;;[m[K]
+  110 |         if ([01;35m[KlinkedBlock->children[i]->keys.size() == 2 * t - 1[m[K)
+      |             [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~[m[K
+[?2004h[0;32m@benztranwot [0m➜ [1;34m/workspaces/Project-4-Zip-Code-Team-4 [0;36m([1;31mmain[0;36m) [0m$ ./search 
+[?2004lB+tree builded successfully!
+B+ tree file: B+Tree_data.txt
+Enter ZIP to search (0 to quit): 56301
+
+FOUND ZIP 56301
+Place:  Saint Cloud
+State:  MN
+County: Stearns
+
+Enter ZIP to search (0 to quit): 999999999
+ZIP 999999999 NOT FOUND in B+ tree
+
+Enter ZIP to search (0 to quit): 0
+[?2004h[0;32m@benztranwot [0m➜ [1;34m/workspaces/Project-4-Zip-Code-Team-4 [0;36m([1;31mmain[0;36m) [0m$ exit
+[?2004lexit
+
+Script done on 2025-12-09 05:44:49+00:00 [COMMAND_EXIT_CODE="0"]
